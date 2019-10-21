@@ -76,6 +76,18 @@ if (-not($referenceHash -eq ((Get-FileHash $directory\FizzBuzz.JavaScript.txt).H
     $failed += "$directory\FizzBuzz.JavaScript.txt"
 }
 
+Write-Host ""
+Write-Host "---------------------------------"
+Write-Host "Building Python"
+
+Set-Location $directory\src\Python
+& python fizzbuzz.py > $directory\FizzBuzz.Python.txt
+
+if (-not($referenceHash -eq ((Get-FileHash $directory\FizzBuzz.Python.txt).Hash))) {
+    Write-Host "Incorrect hash on output for Python implementation. :("
+    $failed += "$directory\FizzBuzz.Python.txt"
+}
+
 
 Set-Location $directory
 
