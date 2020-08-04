@@ -19,6 +19,7 @@ The "Fizz-Buzz test" is an interview question designed to help filter out the 99
 * [JavaScript](src/JavaScript)
 * [Pattern-Lang](src/Pattern-Lang) <sup>1</sup>
 * [PowerShell](src/PowerShell)
+* [PowerShell-Ninja](src/PS-Ninja)
 * [Python 3](src/Python)
 * [Ruby](src/Ruby)
 * [Visual Basic](src/VisualBasic)
