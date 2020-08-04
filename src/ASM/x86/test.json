@@ -6,6 +6,6 @@
     "buildCommand": "wsl",
     "buildCommandParameters": "./linux_build.sh",
     "executeCommand": "wsl",
-    "executeCommandParameters": "./run_fizzbuzz.sh",
+    "executeCommandParameters": "./fizzbuzz",
     "preExecute": ""
 }

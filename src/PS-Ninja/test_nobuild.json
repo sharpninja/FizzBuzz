@@ -1,0 +1,9 @@
+{
+    "$schema": "../test_schema.json",
+    "location": "/src/PS-Ninja",
+    "nameShort": "PS-Ninja",
+    "nameLong": "PowerShell-Ninja",
+    "command": "pwsh",
+    "commandParametersArray": ["-NoProfile", "-File", "./Invoke-FizzBuzz.ps1"],
+    "preExecute": ""
+}

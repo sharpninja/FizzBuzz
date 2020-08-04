@@ -4,6 +4,6 @@
     "nameShort": "Ruby",
     "nameLong": "Ruby",
     "command": "wsl",
-    "commandParametersArray": ["ruby", "./fizz_buzz.rb"],
+    "commandParametersArray": ["--", "~/.rbenv/shims/ruby", "./fizz_buzz.rb"],
     "preExecute": ""
 }

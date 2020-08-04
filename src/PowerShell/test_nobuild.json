@@ -4,6 +4,6 @@
     "nameShort": "PowerShell",
     "nameLong": "PowerShell",
     "command": "powershell",
-    "commandParameters": "./fizzbuzz.ps1",
+    "commandParametersArray": ["-NoProfile", "-File", "./fizzbuzz.ps1"],
     "preExecute": ""
 }

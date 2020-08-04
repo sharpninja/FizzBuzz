@@ -4,8 +4,8 @@
     "nameShort": "armhf",
     "nameLong": "armhf Assembly",
     "buildCommand": "wsl",
-    "buildCommandParameters": "./linux_build.sh",
+    "buildCommandParametersArray": ["./linux_build.sh"],
     "executeCommand": "wsl",
-    "executeCommandParameters": "./run_fizzbuzz.sh",
+    "executeCommandParametersArray": ["./run_fizzbuzz.sh"],
     "preBuild": ""
 }

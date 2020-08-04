@@ -1,37 +1,41 @@
 param (
-    [System.Collections.Generic.List[String]] $Targets = $null
+    [string[]] $Targets = @()
 )
 
 Clear-Host
-$tgts = New-Object "System.Collections.Generic.List[String]"
+[string[]]$tgts = @()
 
-if($Targets -ne $null) { 
+if ($Targets.Length -gt 0) { 
     Write-Debug "Targets is not null."
     $tgts = $Targets 
 }
 
-if($tgts.Count -eq 0) {
+if ($tgts.Length -eq 0) {
     Write-Debug "Populating tgts"
-    $tgts.Add("x64")
-    $tgts.Add("x86")
-    $tgts.Add("armhf")
-    $tgts.Add("C")
-    $tgts.Add("C++")
-    $tgts.Add("CSharp")
-    $tgts.Add("CSharpExpressions")
-    $tgts.Add("CSharpIL")
-    $tgts.Add("VisualBasic")
-    $tgts.Add("FSharp")
-    $tgts.Add("Java")
-    $tgts.Add("JavaScript")
-    $tgts.Add("Python3")
-    $tgts.Add("Ruby")
+    $tgts += "x64";
+    $tgts += "x86";
+    $tgts += "armhf";
+    $tgts += "C";
+    $tgts += "C++";
+    $tgts += "CSharp";
+    $tgts += "CSharpExpressions";
+    $tgts += "CSharpIL";
+    $tgts += "VisualBasic";
+    $tgts += "FSharp";
+    $tgts += "Java";
+    $tgts += "JavaScript";
+    $tgts += "PowerShell";
+    $tgts += "PS-Ninja";
+    $tgts += "Python3";
+    $tgts += "Ruby";
 }
+
+$pattern = [string]::Join("|", $tgts).Replace("+", "\+")
 
 $directory = Get-Location
 $root = $directory.Path
 
-& $directory\Write-OutputFile.ps1
+. $directory\Write-OutputFile.ps1
 
 $referenceHash = (Get-FileHash $directory\FizzBuzz.txt).Hash;
 $failed = New-Object "System.Collections.Generic.List[String]"
@@ -55,17 +59,17 @@ function Invoke-FizzBuzz {
     )
 
     process {
-        if($null -eq $root) { $root = "" }
-        if($null -eq $location) { $location = "" }
-        if($null -eq $buildCommand) { $buildCommand = "" }
-        if($null -eq $buildCommandParameters) { $buildCommandParameters = "" }
-        if($null -eq $buildCommandParametersArray) { $buildCommandParametersArray = @( "" ) }
-        if($null -eq $executeCommand) { $executeCommand = "" }
-        if($null -eq $executeCommandParameters) { $executeCommandParameters = "" }
-        if($null -eq $executeCommandParametersArray) { $executeCommandParametersArray = @( "" ) }
-        if($null -eq $nameShort) { $nameShort = "" }
-        if($null -eq $nameLong) { $nameLong = "" }
-        if($null -eq $preBuild) { $preBuild = "" }
+        if ($null -eq $root) { $root = "" }
+        if ($null -eq $location) { $location = "" }
+        if ($null -eq $buildCommand) { $buildCommand = "" }
+        if ($null -eq $buildCommandParameters) { $buildCommandParameters = "" }
+        if ($null -eq $buildCommandParametersArray) { $buildCommandParametersArray = @( "" ) }
+        if ($null -eq $executeCommand) { $executeCommand = "" }
+        if ($null -eq $executeCommandParameters) { $executeCommandParameters = "" }
+        if ($null -eq $executeCommandParametersArray) { $executeCommandParametersArray = @( "" ) }
+        if ($null -eq $nameShort) { $nameShort = "" }
+        if ($null -eq $nameLong) { $nameLong = "" }
+        if ($null -eq $preBuild) { $preBuild = "" }
 
         Write-Host "Looking for [$nameShort]"
         Write-Debug $root
@@ -90,14 +94,14 @@ function Invoke-FizzBuzz {
             Join-Path $root -ChildPath $location | Set-Location
             $wd = Get-Location
 
-            if($preBuild) {
+            if ($preBuild) {
                 & $preBuild
             }
 
             Write-Host "$buildCommand $buildCommandParameters $buildCommandParametersArray"
             & $buildCommand $buildCommandParameters $buildCommandParametersArray
 
-            if($LASTEXITCODE -eq 0){
+            if ($LASTEXITCODE -eq 0) {
                 Write-Host "Executing $executeCommand $executeCommandParameters $executeCommandParametersArray in $location"
 
                 $outputFilename = Join-Path $root -ChildPath "FizzBuzz.$nameShort.txt"
@@ -112,7 +116,8 @@ function Invoke-FizzBuzz {
                     Write-Debug "$nameLong passed!"
                     $pass.Add($wd)
                 }
-            } else {
+            }
+            else {
                 Write-Host "Error compiling $nameLong program."        
             }        
         }
@@ -134,13 +139,13 @@ function Invoke-FizzBuzzNoBuild {
     )
 
     process {
-        if($null -eq $root) { $root = "" }
-        if($null -eq $location) { $location = "" }
-        if($null -eq $command) { $command = "" }
-        if($null -eq $commandParameters) { $commandParameters = "" }
-        if($null -eq $nameShort) { $nameShort = "" }
-        if($null -eq $nameLong) { $nameLong = "" }
-        if($null -eq $preExecute) { $preExecute = "" }
+        if ($null -eq $root) { $root = "" }
+        if ($null -eq $location) { $location = "" }
+        if ($null -eq $command) { $command = "" }
+        if ($null -eq $commandParameters) { $commandParameters = "" }
+        if ($null -eq $nameShort) { $nameShort = "" }
+        if ($null -eq $nameLong) { $nameLong = "" }
+        if ($null -eq $preExecute) { $preExecute = "" }
 
         Write-Host "Looking for [$nameShort]"
         Write-Debug $root
@@ -161,7 +166,7 @@ function Invoke-FizzBuzzNoBuild {
             Join-Path $root -ChildPath $location | Set-Location
             $wd = Get-Location
 
-            if($preExecute -ne "") {
+            if ($preExecute -ne "") {
                 & $preExecute
             }
 
@@ -186,22 +191,24 @@ function Invoke-FizzBuzzNoBuild {
 $tests = Get-ChildItem test.json -Recurse
 
 $tests | ForEach-Object -Process {
-    Write-Host "Testing $_"
-    $test = (Get-Content $_ | Out-String | ConvertFrom-Json)
+    if ($_ -match $pattern) {
+        Write-Host "Testing $_"
+        $test = (Get-Content $_ | Out-String | ConvertFrom-Json)
 
-    Invoke-FizzBuzz -location $test.location `
-        -buildCommand $test.buildCommand `
-        -buildCommandParameters $test.buildCommandParameters `
-        -buildCommandParametersArray $test.buildCommandParametersArray `
-        -executeCommand $test.executeCommand `
-        -executeCommandParameters $test.executeCommandParameters `
-        -executeCommandParametersArray $test.executeCommandParametersArray `
-        -nameShort $test.nameShort `
-        -nameLong $test.nameLong `
-        -preBuild $test.preBuild `
-        -fail $failed `
-        -pass $passed `
-        -targets $tgts
+        Invoke-FizzBuzz -location $test.location `
+            -buildCommand $test.buildCommand `
+            -buildCommandParameters $test.buildCommandParameters `
+            -buildCommandParametersArray $test.buildCommandParametersArray `
+            -executeCommand $test.executeCommand `
+            -executeCommandParameters $test.executeCommandParameters `
+            -executeCommandParametersArray $test.executeCommandParametersArray `
+            -nameShort $test.nameShort `
+            -nameLong $test.nameLong `
+            -preBuild $test.preBuild `
+            -fail $failed `
+            -pass $passed `
+            -targets $tgts
+    }
 }
 
 Set-Location $directory
@@ -209,19 +216,21 @@ Set-Location $directory
 $tests = Get-ChildItem test_nobuild.json -Recurse
 
 $tests | ForEach-Object -Process {
-    Write-Host "Testing $_"
-    $test = (Get-Content $_ | Out-String | ConvertFrom-Json)
+    if ($_ -match $pattern) {
+        Write-Host "Testing $_"
+        $test = (Get-Content $_ | Out-String | ConvertFrom-Json)
 
-    Invoke-FizzBuzzNoBuild -location $test.location `
-        -command $test.command `
-        -commandParameters $test.commandParameters `
-        -commandParametersArray $test.commandParametersArray `
-        -nameShort $test.nameShort `
-        -nameLong $test.nameLong `
-        -preExecute $test.preExecute `
-        -fail $failed `
-        -pass $passed `
-        -targets $tgts
+        Invoke-FizzBuzzNoBuild -location $test.location `
+            -command $test.command `
+            -commandParameters $test.commandParameters `
+            -commandParametersArray $test.commandParametersArray `
+            -nameShort $test.nameShort `
+            -nameLong $test.nameLong `
+            -preExecute $test.preExecute `
+            -fail $failed `
+            -pass $passed `
+            -targets $tgts
+    }
 }
 
 Set-Location $directory
@@ -231,14 +240,14 @@ Write-Host "Results"
 
 if ($failed.Count -gt 0) {
     Write-Host "Failed:"
-    $failed | ForEach-Object -Process {
+    $failed | Sort-Object | ForEach-Object -Process {
         Write-Host $_
     }
 }
 
 if ($passed.Count -gt 0) {
     Write-Host "Passed:"
-    $passed | ForEach-Object -Process {
+    $passed | Sort-Object | ForEach-Object -Process {
         Write-Host $_
     }
 }

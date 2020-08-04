@@ -1,2 +1,2 @@
 export QEMU_LD_PREFIX=/usr/arm-linux-gnueabihf;
-qemu-arm fizzbuzz;
+/usr/bin/qemu-arm-static fizzbuzz;
