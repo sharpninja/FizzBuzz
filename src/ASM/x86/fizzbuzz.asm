@@ -1,9 +1,9 @@
-# FizzBuzz Implementation in x86 ASM For Linux
-# matthew - October 22, 2019
-# 
-# "Write a program that prints the numbers from 1 to 100. But for multiples of three print 
-# "Fizz" instead of the number and for the multiples of five print "Buzz". For numbers which 
-# are multiples of both three and five print "FizzBuzz"."
+; FizzBuzz Implementation in x86 ASM For Linux
+; matthew - October 22, 2019
+;
+; "Write a program that prints the numbers from 1 to 100. But for multiples of three print
+; "Fizz" instead of the number and for the multiples of five print "Buzz". For numbers which
+; are multiples of both three and five print "FizzBuzz"."
 
 global _start
 extern printf
@@ -19,7 +19,7 @@ loop:
    xor edx, edx
    mov ecx, 3
    div ecx
-   
+
    push edx
    mov eax, ebx
 
@@ -29,9 +29,9 @@ loop:
 
    pop eax
    cmp eax, 0
-   
+
    push edx
-   
+
    jne checkBuzz
 
 printFizz:
@@ -73,7 +73,7 @@ endLoop:
 
    push 0
    call exit
- 
+
 section .rodata
 
 fizz     db "Fizz", 0

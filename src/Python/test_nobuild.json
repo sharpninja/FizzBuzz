@@ -3,7 +3,7 @@
     "location": "/src/Python",
     "nameShort": "Python3",
     "nameLong": "Python 3",
-    "command": "python",
+    "command": "python3",
     "commandParameters": "fizzbuzz.py",
     "preExecute": ""
 }

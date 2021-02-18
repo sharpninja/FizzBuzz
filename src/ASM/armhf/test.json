@@ -1,11 +1,11 @@
 {
-    "$schema": "../test_schema.json",
+    "$schema": "../../test_schema.json",
     "location": "/src/ASM/armhf",
     "nameShort": "armhf",
     "nameLong": "armhf Assembly",
-    "buildCommand": "wsl",
-    "buildCommandParametersArray": ["./linux_build.sh"],
-    "executeCommand": "wsl",
+    "buildCommand": "/bin/bash",
+    "buildCommandParametersArray": [ "./linux_build.sh"],
+    "executeCommand": "/bin/bash",
     "executeCommandParametersArray": ["./run_fizzbuzz.sh"],
     "preBuild": ""
 }

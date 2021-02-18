@@ -3,9 +3,9 @@
     "location": "/src/C++",
     "nameShort": "C++",
     "nameLong": "C++",
-    "buildCommand": "wsl",
+    "buildCommand": "/bin/bash",
     "buildCommandParameters": "./linux_build.sh",
-    "executeCommand": "wsl",
-    "executeCommandParameters": "./bin/linux/fizzbuzz",
+    "executeCommand": "/home/ninja/.rbenv/shims/ruby",
+    "executeCommandParametersArray": ["./bin/linux/fizzbuzz"],
     "preBuild": ""
 }

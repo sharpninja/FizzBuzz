@@ -3,7 +3,7 @@
     "location": "/src/Ruby",
     "nameShort": "Ruby",
     "nameLong": "Ruby",
-    "command": "wsl",
-    "commandParametersArray": ["--", "~/.rbenv/shims/ruby", "./fizz_buzz.rb"],
+    "command": "ruby",
+    "commandParametersArray": ["./fizz_buzz.rb"],
     "preExecute": ""
 }

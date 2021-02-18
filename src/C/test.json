@@ -1,11 +1,11 @@
 {
     "$schema": "../test_schema.json",
-    "location": "/src/C",
+    "location": "./src/C",
     "nameShort": "C",
     "nameLong": "C",
-    "buildCommand": "wsl",
+    "buildCommand": "/bin/bash",
     "buildCommandParameters": "./linux_build.sh",
-    "executeCommand": "wsl",
-    "executeCommandParameters": "./bin/linux/fizzbuzz",
+    "executeCommand": "/bin/bash",
+    "executeCommandParametersArray": ["-c", "./bin/linux/fizzbuzz"],
     "preBuild": ""
 }

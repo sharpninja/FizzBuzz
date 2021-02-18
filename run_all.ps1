@@ -5,9 +5,9 @@ param (
 Clear-Host
 [string[]]$tgts = @()
 
-if ($Targets.Length -gt 0) { 
+if ($Targets.Length -gt 0) {
     Write-Debug "Targets is not null."
-    $tgts = $Targets 
+    $tgts = $Targets
 }
 
 if ($tgts.Length -eq 0) {
@@ -35,15 +35,15 @@ $pattern = [string]::Join("|", $tgts).Replace("+", "\+")
 $directory = Get-Location
 $root = $directory.Path
 
-. $directory\Write-OutputFile.ps1
+. $directory/Write-OutputFile.ps1
 
-$referenceHash = (Get-FileHash $directory\FizzBuzz.txt).Hash;
+$referenceHash = (Get-FileHash $directory/FizzBuzz.txt).Hash;
 $failed = New-Object "System.Collections.Generic.List[String]"
 $passed = New-Object "System.Collections.Generic.List[String]"
 
 function Invoke-FizzBuzz {
     param (
-        $location = "\src"
+        $location = "/src"
         , $buildCommand = ""
         , $buildCommandParameters = ""
         , $buildCommandParametersArray = @()
@@ -82,11 +82,11 @@ function Invoke-FizzBuzz {
         Write-Debug $nameLong
         Write-Debug $preBuild
 
-        $isTarget = $targets | Where-Object { $nameShort -ilike $_ }
+        $isTarget = $targets | Where-Object { $nameShort -imatch $_ }
         $found = Get-Command $buildCommand -errorAction SilentlyContinue
 
         Write-Debug "[$isTarget]"
-        if ($isTarget -and $found) {        
+        if ($isTarget -and $found) {
             Write-Debug "$buildCommand exists"
 
             Write-Debug "Building $nameLong in $location"
@@ -108,7 +108,13 @@ function Invoke-FizzBuzz {
 
                 & $executeCommand $executeCommandParameters $executeCommandParametersArray > $outputFilename
 
-                if (-not($referenceHash -eq ((Get-FileHash $outputFilename).Hash))) {
+                $referenceHash = ((Get-FileHash (Join-Path $root -ChildPath "FizzBuzz.txt")).Hash)
+                $targetHash = ((Get-FileHash $outputFilename).Hash)
+
+                Write-Host "Reference Hash: $referenceHash"
+                Write-Host "Target Hash: $targetHash"
+
+                if ($referenceHash -ne $targetHash) {
                     Write-Host "Incorrect hash on output for $nameLong implementation. :("
                     $fail.Add($wd)
                 }
@@ -118,15 +124,20 @@ function Invoke-FizzBuzz {
                 }
             }
             else {
-                Write-Host "Error compiling $nameLong program."        
-            }        
+                Write-Host "Error compiling $nameLong program."
+            }
+        }
+        else {
+            if($found) {
+                Write-Error "Build Command $found not found."
+            }
         }
     }
 }
 
 function Invoke-FizzBuzzNoBuild {
     param (
-        $location = "\src"
+        $location = "/src"
         , $command = ""
         , $commandParameters = ""
         , $commandParametersArray = @()
@@ -160,7 +171,7 @@ function Invoke-FizzBuzzNoBuild {
         Write-Debug "[$isTarget]"
         $found = Get-Command $command -errorAction SilentlyContinue
 
-        if ($isTarget -and $found) {        
+        if ($isTarget -and $found) {
             Write-Debug "$command exists"
 
             Join-Path $root -ChildPath $location | Set-Location
@@ -173,10 +184,15 @@ function Invoke-FizzBuzzNoBuild {
             Write-Host "Executing $command $commandParameters $commandParametersArray in $location"
 
             $outputFilename = Join-Path $root -ChildPath "FizzBuzz.$nameShort.txt"
-            
+
             & $command $commandParameters $commandParametersArray > $outputFilename
 
-            if (-not($referenceHash -eq ((Get-FileHash $outputFilename).Hash))) {
+            $targetHash = ((Get-FileHash $outputFilename).Hash)
+
+            Write-Host "Reference Hash: $referenceHash"
+            Write-Host "Target Hash: $targetHash"
+
+            if ($referenceHash -ne $targetHash) {
                 Write-Host "Incorrect hash on output for $nameLong implementation. :("
                 $fail.Add($wd)
             }
@@ -191,7 +207,7 @@ function Invoke-FizzBuzzNoBuild {
 $tests = Get-ChildItem test.json -Recurse
 
 $tests | ForEach-Object -Process {
-    if ($_ -match $pattern) {
+    if ($_.Directory.Name -match $pattern) {
         Write-Host "Testing $_"
         $test = (Get-Content $_ | Out-String | ConvertFrom-Json)
 
@@ -216,7 +232,7 @@ Set-Location $directory
 $tests = Get-ChildItem test_nobuild.json -Recurse
 
 $tests | ForEach-Object -Process {
-    if ($_ -match $pattern) {
+    if ($_.Directory.Name -match $pattern) {
         Write-Host "Testing $_"
         $test = (Get-Content $_ | Out-String | ConvertFrom-Json)
 

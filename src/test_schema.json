@@ -36,6 +36,5 @@
             "description": "Command line command to execute to before Building the FizzBuzz Test.",
             "type": "string"
         }
-    },
-    "required": ["id", "name", "price"]
+    }
 }

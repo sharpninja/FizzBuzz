@@ -1,11 +1,11 @@
 {
-    "$schema": "../test_schema.json",
+    "$schema": "../../test_schema.json",
     "location": "/src/ASM/x86",
     "nameShort": "x86",
     "nameLong": "x86 Assembly",
-    "buildCommand": "wsl",
+    "buildCommand": "/bin/bash",
     "buildCommandParameters": "./linux_build.sh",
-    "executeCommand": "wsl",
-    "executeCommandParameters": "./fizzbuzz",
+    "executeCommand": "/bin/bash",
+    "executeCommandParametersArray": ["-c", "./fizzbuzz"],
     "preExecute": ""
 }

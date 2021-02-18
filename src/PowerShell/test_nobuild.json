@@ -3,7 +3,7 @@
     "location": "/src/PowerShell",
     "nameShort": "PowerShell",
     "nameLong": "PowerShell",
-    "command": "powershell",
+    "command": "pwsh",
     "commandParametersArray": ["-NoProfile", "-File", "./fizzbuzz.ps1"],
     "preExecute": ""
 }

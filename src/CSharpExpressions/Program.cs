@@ -2,8 +2,8 @@
 * FizzBuzz Implementation in C# with Compiled Expression Trees
 * The Sharp Ninja - October 20, 2019
 *
-* "Write a program that prints the numbers from 1 to 100. But for multiples of three print 
-* “Fizz” instead of the number and for the multiples of five print “Buzz”. For numbers which 
+* "Write a program that prints the numbers from 1 to 100. But for multiples of three print
+* “Fizz” instead of the number and for the multiples of five print “Buzz”. For numbers which
 * are multiples of both three and five print “FizzBuzz”."
 */
 
@@ -20,13 +20,13 @@ namespace CSharpExpressions
 {
     class Program
     {
-        static Expression<Func<int, string?>> ByThree = 
+        static Expression<Func<int, string?>> ByThree =
             (i) => i % 3 == 0 ? "Fizz" : null;
 
-        static Expression<Func<int, string?>> ByFive = 
+        static Expression<Func<int, string?>> ByFive =
             (i) => i % 5 == 0 ? "Buzz" : null;
 
-        static Expression<Func<int, string?>> ByThreeAndFive = 
+        static Expression<Func<int, string?>> ByThreeAndFive =
             (i) => i % 5 == 0 && i % 3 == 0 ? "FizzBuzz" : null;
 
         static Expression<Func<int, string>> Other = (i) => $"{i}";

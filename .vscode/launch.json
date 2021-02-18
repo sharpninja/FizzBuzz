@@ -10,9 +10,19 @@
             "request": "launch",
             "script": "${file}",
             "cwd": "${file}",
-            "args": [                
+            "args": [
                 // "-Targets",
                 // "PS-Ninja"
+            ]
+        },
+        {
+            "name": "RunAll",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "./run_all.ps1",
+            "args": [
+                // "-Targets",
+                // "C"
             ]
         },
         {
