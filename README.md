@@ -15,6 +15,7 @@ The "Fizz-Buzz test" is an interview question designed to help filter out the 99
 * [C# w/Compiled Expression Trees](src/CSharpExpressions)
 * [C# w/IL](src/CSharpIL)
 * [F#](src/FSharp)
+* [Homespring](src/Homespring)
 * [Java](src/Java)
 * [JavaScript](src/JavaScript)
 * [Pattern-Lang](src/Pattern-Lang) <sup>1</sup>
