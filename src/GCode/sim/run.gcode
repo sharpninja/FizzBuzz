@@ -1,0 +1,1 @@
+FIZZBUZZ N=100

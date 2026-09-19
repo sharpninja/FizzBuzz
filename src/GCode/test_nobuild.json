@@ -1,0 +1,9 @@
+{
+    "$schema": "../test_schema.json",
+    "location": "/src/GCode",
+    "nameShort": "GCode",
+    "nameLong": "G-code (Klipper)",
+    "command": "klipper",
+    "commandParametersArray": ["FIZZBUZZ", "N=100"],
+    "preExecute": ""
+}

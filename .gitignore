@@ -265,3 +265,6 @@ __pycache__/
 SodiumC.dll
 /src/Quarrel/SodiumC/ARM
 src/Java/ninja
+
+# Klippy batch simulator working files
+src/GCode/sim/out/
