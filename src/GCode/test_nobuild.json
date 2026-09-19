@@ -4,6 +4,6 @@
     "nameShort": "GCode",
     "nameLong": "G-code (Klipper)",
     "command": "klipper",
-    "commandParametersArray": ["FIZZBUZZ"],
+    "commandParametersArray": ["FIZZBUZZ", "N=100"],
     "preExecute": ""
 }
