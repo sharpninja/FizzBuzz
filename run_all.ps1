@@ -24,6 +24,7 @@ if ($tgts.Length -eq 0) {
     $tgts += "FSharp";
     $tgts += "Java";
     $tgts += "JavaScript";
+    $tgts += "OpenSCAD";
     $tgts += "PowerShell";
     $tgts += "PS-Ninja";
     $tgts += "Python3";
