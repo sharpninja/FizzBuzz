@@ -16,6 +16,7 @@ The "Fizz-Buzz test" is an interview question designed to help filter out the 99
 * [C# w/IL](src/CSharpIL)
 * [F#](src/FSharp)
 * [G-code (Klipper)](src/GCode) <sup>2</sup>
+* [Homespring](src/Homespring) <sup>3</sup>
 * [Java](src/Java)
 * [JavaScript](src/JavaScript)
 * [OpenSCAD](src/OpenSCAD)
@@ -107,3 +108,5 @@ Place this file in the _first_ child directory of `/src` in your solution.
 <sup>1</sup> - Pattern-Lang is still concept only/
 
 <sup>2</sup> - Prints the sequence in PLA+ (single colour) on a Klipper printer (256×256 mm bed). Run from the Klipper console as `FIZZBUZZ N=100`. `src/GCode/sim/simulate.py` replays that call through Klippy batch mode and renders `src/GCode/fizzbuzz_preview.png`. `run_all.ps1` skips the hash check: there is no host `klipper` command, and a toolpath cannot hash-match `FizzBuzz.txt`.
+
+<sup>3</sup> - Runs on a Homespring interpreter, such as `hsrun` from https://github.com/jneem/homespring (OCaml; build from source). The program is newline-sensitive, so it must keep LF line endings (a CRLF checkout makes it output nothing). `run_all.ps1` skips it: `hsrun` is not on PATH, and `hsrun` prints a tree dump before the program output, so stdout cannot hash-match `FizzBuzz.txt`.

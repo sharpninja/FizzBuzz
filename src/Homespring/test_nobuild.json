@@ -1,0 +1,9 @@
+{
+    "$schema": "../test_schema.json",
+    "location": "/src/Homespring",
+    "nameShort": "Homespring",
+    "nameLong": "HOtMEfSPRIbNG",
+    "command": "hsrun",
+    "commandParameters": "./fizzbuzz.hs",
+    "preExecute": ""
+}
