@@ -106,4 +106,4 @@ Place this file in the _first_ child directory of `/src` in your solution.
 
 <sup>1</sup> - Pattern-Lang is still concept only/
 
-<sup>2</sup> - Prints the sequence in PLA+ (single colour) on a Klipper printer (256×256 mm bed). Run from the Klipper console as `FIZZBUZZ N=100`. `run_all.ps1` skips it: there is no host `klipper` command, and a toolpath cannot hash-match `FizzBuzz.txt`.
+<sup>2</sup> - Prints the sequence in PLA+ (single colour) on a Klipper printer (256×256 mm bed). Run from the Klipper console as `FIZZBUZZ N=100`. `src/GCode/sim/simulate.py` replays that call through Klippy batch mode and renders `src/GCode/fizzbuzz_preview.png`. `run_all.ps1` skips the hash check: there is no host `klipper` command, and a toolpath cannot hash-match `FizzBuzz.txt`.
