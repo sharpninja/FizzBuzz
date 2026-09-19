@@ -22,6 +22,7 @@ if ($tgts.Length -eq 0) {
     $tgts += "CSharpIL";
     $tgts += "VisualBasic";
     $tgts += "FSharp";
+    $tgts += "GCode";
     $tgts += "Java";
     $tgts += "JavaScript";
     $tgts += "OpenSCAD";

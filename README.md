@@ -15,6 +15,7 @@ The "Fizz-Buzz test" is an interview question designed to help filter out the 99
 * [C# w/Compiled Expression Trees](src/CSharpExpressions)
 * [C# w/IL](src/CSharpIL)
 * [F#](src/FSharp)
+* [G-code (Klipper)](src/GCode) <sup>2</sup>
 * [Java](src/Java)
 * [JavaScript](src/JavaScript)
 * [OpenSCAD](src/OpenSCAD)
@@ -104,3 +105,5 @@ Place this file in the _first_ child directory of `/src` in your solution.
 ---
 
 <sup>1</sup> - Pattern-Lang is still concept only/
+
+<sup>2</sup> - Plots the sequence on a Klipper printer (256×256 mm bed). `run_all.ps1` skips it: there is no host `klipper` command, and a toolpath cannot hash-match `FizzBuzz.txt`.
