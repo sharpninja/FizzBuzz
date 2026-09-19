@@ -1,0 +1,9 @@
+{
+    "$schema": "../test_schema.json",
+    "location": "/src/OpenSCAD",
+    "nameShort": "OpenSCAD",
+    "nameLong": "OpenSCAD",
+    "command": "openscad",
+    "commandParametersArray": ["-o", "fizzbuzz.stl", "fizzbuzz.scad"],
+    "preExecute": ""
+}

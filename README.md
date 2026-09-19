@@ -17,6 +17,7 @@ The "Fizz-Buzz test" is an interview question designed to help filter out the 99
 * [F#](src/FSharp)
 * [Java](src/Java)
 * [JavaScript](src/JavaScript)
+* [OpenSCAD](src/OpenSCAD)
 * [Pattern-Lang](src/Pattern-Lang) <sup>1</sup>
 * [PowerShell](src/PowerShell)
 * [PowerShell-Ninja](src/PS-Ninja)
