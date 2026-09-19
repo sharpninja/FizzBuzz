@@ -18,7 +18,7 @@ python3 src/GCode/sim/simulate.py --klipper /tmp/klipper -n 100
 That:
 
 1. Invokes Klippy with `FIZZBUZZ N=100` (same entry as the printer console)
-2. Checks the 100 calculated labels against `FizzBuzz.txt`
+2. Diffs the 100 labels Klipper printed against `FizzBuzz.txt` (no second FizzBuzz implementation)
 3. Checks extruded XY stays inside `[18, 238]` mm on the 256×256 bed
 4. Writes `src/GCode/fizzbuzz_preview.png` (true 256 mm bed)
 5. If `gcode-viewer` is on `PATH`, also writes `src/GCode/fizzbuzz_preview_gcode_viewer.png`

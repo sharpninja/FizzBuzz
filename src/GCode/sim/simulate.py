@@ -27,20 +27,6 @@ WORD_RE = re.compile(r"([XYZEF])([-+]?(?:\d+\.?\d*|\.\d+))")
 LABEL_RE = re.compile(r"^FIZZBUZZ (\d+) (.+)$")
 
 
-def expected_labels(n: int) -> list[str]:
-    out = []
-    for i in range(1, n + 1):
-        if i % 15 == 0:
-            out.append("FizzBuzz")
-        elif i % 3 == 0:
-            out.append("Fizz")
-        elif i % 5 == 0:
-            out.append("Buzz")
-        else:
-            out.append(str(i))
-    return out
-
-
 def find_klipper(explicit: Path | None) -> Path:
     if explicit:
         return explicit
@@ -213,15 +199,18 @@ def main() -> int:
         raise SystemExit("No PATH G0/G1 lines in klippy.log — motion was not captured")
 
     got = [lab for _, lab in labels]
-    exp = expected_labels(args.n)
+    # The macros own the math. This harness only diffs Klipper's labels
+    # against the repo reference file — it does not recompute FizzBuzz.
+    if not REF.is_file():
+        raise SystemExit(f"Missing reference file {REF}")
+    exp = REF.read_text().splitlines()[: args.n]
     if got != exp:
-        print("Label mismatch vs classic FizzBuzz:", file=sys.stderr)
+        print("Klipper labels do not match FizzBuzz.txt:", file=sys.stderr)
         for i, (a, b) in enumerate(zip(got, exp), 1):
             if a != b:
-                print(f"  n={i}: got {a!r} expected {b!r}", file=sys.stderr)
+                print(f"  n={i}: klipper {a!r}  FizzBuzz.txt {b!r}", file=sys.stderr)
+        print(f"  counts: klipper={len(got)} reference={len(exp)}", file=sys.stderr)
         return 1
-    if args.n == 100 and REF.is_file() and got != REF.read_text().splitlines():
-        raise SystemExit("Labels do not match FizzBuzz.txt")
 
     xs, ys, exs, eys = [], [], [], []
     for x0, y0, x1, y1, extrude in collect_segments(paths):
