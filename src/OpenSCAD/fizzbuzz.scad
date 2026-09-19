@@ -6,16 +6,16 @@
  * “Fizz” instead of the number and for the multiples of five print “Buzz”. For numbers which
  * are multiples of both three and five print “FizzBuzz”."
  *
- * This program does not print to a console.  Rendering it produces a 3D medallion of the
- * classic 1–100 sequence: ten concentric decade rings of extruded text.  Height (and color
- * in preview) encodes the word so a monochrome STL is still readable:
+ * This program does not print to a console.  Rendering it produces a 3D plaque of the
+ * classic 1–100 sequence: a 10×10 grid of extruded labels.  Tile height (and preview
+ * color) encodes the word so a monochrome STL is still readable:
  *
  *     number  <  Fizz  <  Buzz  <  FizzBuzz
  *
  * Open `fizzbuzz.scad` in the OpenSCAD GUI (F5 preview / F6 render) or export from the CLI:
  *
  *     openscad -o fizzbuzz.stl fizzbuzz.scad
- *     openscad -o fizzbuzz.png --imgsize=1920,1080 --viewall --autocenter fizzbuzz.scad
+ *     openscad -o fizzbuzz.png --imgsize=1920,1080 fizzbuzz.scad
  *
  * Uses Liberation Sans, which ships with official OpenSCAD builds and is also provided by
  * the `fonts-liberation` package on Debian/Ubuntu.  No font files are bundled in this repo.
@@ -24,20 +24,23 @@
 $fa = 8;
 $fs = 0.45;
 
-// Default camera: slight isometric tilt so both the labels and the height code read clearly.
-$vpt = [0, -4, 6];
-$vpr = [32, 0, 22];
-$vpd = 520;
+// Default camera: isometric enough to show the height code, shallow enough to read the grid.
+$vpt = [0, 10, 10];
+$vpr = [55, 0, 22];
+$vpd = 500;
 
 FONT = "Liberation Sans:style=Bold";
+TEXT_COLOR = [0.07, 0.08, 0.10];
 
-RINGS      = 10;
-PER_RING   = 10;
-INNER_R    = 26;
-RING_STEP  = 8.4;
+COLS       = 10;
+ROWS       = 10;
+CELL_W     = 24.0;
+CELL_D     = 9.6;
+GAP        = 1.8;
+TITLE_BAND = 30;
+MARGIN     = 10;
+FRAME      = 3.8;
 BASE_H     = 3.2;
-RIM_H      = 5.0;
-PAD        = 12;
 
 function fb_label(n) =
     (n % 15 == 0) ? "FizzBuzz" :
@@ -53,31 +56,36 @@ function fb_kind(n) =
 
 // Distinct Z heights so Fizz vs Buzz stay distinguishable after STL export.
 function fb_height(n) =
-    (n % 15 == 0) ? 7.4 :
-    (n %  5 == 0) ? 5.2 :
-    (n %  3 == 0) ? 3.8 :
-    2.2;
+    (n % 15 == 0) ? 12.0 :
+    (n %  5 == 0) ? 8.2 :
+    (n %  3 == 0) ? 5.6 :
+    2.5;
 
-function fb_color(n) =
-    (n % 15 == 0) ? [0.91, 0.20, 0.46] :
-    (n %  5 == 0) ? [0.98, 0.72, 0.16] :
-    (n %  3 == 0) ? [0.18, 0.76, 0.50] :
-    [0.86, 0.89, 0.93];
+function fb_tile_color(n) =
+    (n % 15 == 0) ? [0.91, 0.22, 0.48] :
+    (n %  5 == 0) ? [0.98, 0.74, 0.18] :
+    (n %  3 == 0) ? [0.18, 0.76, 0.52] :
+    [0.90, 0.92, 0.95];
 
-function ring_radius(ring) = INNER_R + ring * RING_STEP;
+function text_size(n) =
+    (n % 15 == 0) ? 2.70 :
+    (n %  3 == 0 || n % 5 == 0) ? 3.80 :
+    (n >= 100) ? 3.8 :
+    (n >= 10) ? 4.4 :
+    5.2;
 
-function chord(ring) = 2 * ring_radius(ring) * sin(180 / PER_RING);
+function col_of(n) = (n - 1) % COLS;
+function row_of(n) = floor((n - 1) / COLS);
 
-// Fit each label to the ring spacing.  Character width is an em-fraction of Liberation Bold.
-function label_size(n, ring) =
-    let (
-        label = fb_label(n),
-        room  = chord(ring) * 0.78,
-        em    = 0.62 * max(1, len(label))
-    )
-    min(ring == 0 ? 4.0 : 5.2, room / em);
+function grid_w() = COLS * CELL_W + (COLS - 1) * GAP;
+function grid_d() = ROWS * CELL_D + (ROWS - 1) * GAP;
+function plaque_w() = grid_w() + 2 * MARGIN + 2 * FRAME;
+function plaque_d() = grid_d() + TITLE_BAND + 2 * MARGIN + 2 * FRAME;
+function plaque_shift_y() = TITLE_BAND / 2;
 
-function outer_radius() = ring_radius(RINGS - 1) + PAD;
+// Grid is centered on the origin.  Row 0 (1–10) sits at the top.
+function cell_x(n) = (col_of(n) - (COLS - 1) / 2) * (CELL_W + GAP);
+function cell_y(n) = ((ROWS - 1) / 2 - row_of(n)) * (CELL_D + GAP);
 
 module rounded_rect(w, h, r) {
     if (r <= 0) {
@@ -88,96 +96,101 @@ module rounded_rect(w, h, r) {
     }
 }
 
-module medallion() {
-    r = outer_radius();
+module plaque() {
+    w = plaque_w();
+    d = plaque_d();
 
-    color([0.16, 0.18, 0.22])
-        cylinder(h = BASE_H, r = r);
+    translate([0, plaque_shift_y(), 0]) {
+        color([0.15, 0.17, 0.20])
+            linear_extrude(height = BASE_H)
+                rounded_rect(w, d, 9);
 
-    color([0.28, 0.31, 0.36])
-        translate([0, 0, BASE_H])
-            difference() {
-                cylinder(h = RIM_H - BASE_H, r = r);
-                translate([0, 0, -0.1])
-                    cylinder(h = RIM_H, r = r - 3.2);
-            }
+        color([0.27, 0.30, 0.35])
+            translate([0, 0, BASE_H])
+                linear_extrude(height = 2.4)
+                    difference() {
+                        rounded_rect(w, d, 9);
+                        rounded_rect(w - 2 * FRAME, d - 2 * FRAME, 6);
+                    }
+    }
 
-    // Soft recessed well behind the rings.
-    color([0.13, 0.14, 0.17])
-        translate([0, 0, BASE_H - 0.35])
-            cylinder(h = 0.4, r = ring_radius(RINGS - 1) + 4.5);
+    color([0.12, 0.13, 0.16])
+        translate([0, 0, BASE_H - 0.25])
+            linear_extrude(height = 0.3)
+                rounded_rect(grid_w() + 3, grid_d() + 3, 2);
 }
 
 module title() {
+    y0 = grid_d() / 2;
+
     color([0.96, 0.97, 0.94])
-        translate([0, 3.2, BASE_H])
-            linear_extrude(height = 3.6, convexity = 8)
-                text("FIZZBUZZ", size = 6.2, font = FONT,
+        translate([0, y0 + 22, BASE_H])
+            linear_extrude(height = 3.4, convexity = 8)
+                text("FIZZBUZZ", size = 7.6, font = FONT,
                      halign = "center", valign = "center");
 
-    color([0.70, 0.74, 0.80])
-        translate([0, -5.6, BASE_H])
-            linear_extrude(height = 2.2, convexity = 8)
-                text("1 – 100", size = 3.6, font = FONT,
+    color([0.72, 0.76, 0.82])
+        translate([0, y0 + 13.6, BASE_H])
+            linear_extrude(height = 2.0, convexity = 8)
+                text("1  –  100", size = 3.5, font = FONT,
                      halign = "center", valign = "center");
-}
-
-module entry(n, ring, slot) {
-    r   = ring_radius(ring);
-    ang = slot * (360 / PER_RING) + ring * (180 / PER_RING);
-    h   = fb_height(n);
-    s   = label_size(n, ring);
-    t   = fb_label(n);
-    tw  = len(t) * s * 0.62 + 2.4;
-    th  = s * 1.25 + 1.6;
-    rad = (fb_kind(n) == "fizzbuzz") ? th * 0.48 :
-          (fb_kind(n) == "fizz")     ? th * 0.42 :
-          0.9;
-
-    translate([r * cos(ang), r * sin(ang), BASE_H])
-        color(fb_color(n))
-            union() {
-                linear_extrude(height = h * 0.42)
-                    rounded_rect(tw, th, rad);
-
-                translate([0, 0, h * 0.42])
-                    linear_extrude(height = h * 0.58, convexity = 12)
-                        text(t, size = s, font = FONT,
-                             halign = "center", valign = "center");
-            }
-}
-
-module decade_rings() {
-    for (ring = [0 : RINGS - 1], slot = [0 : PER_RING - 1]) {
-        n = ring * PER_RING + slot + 1;
-        entry(n, ring, slot);
-    }
 }
 
 module legend() {
-    samples = [
-        [1,  "number",   [0.86, 0.89, 0.93]],
-        [3,  "Fizz",     [0.18, 0.76, 0.50]],
-        [5,  "Buzz",     [0.98, 0.72, 0.16]],
-        [15, "FizzBuzz", [0.91, 0.20, 0.46]]
+    y = grid_d() / 2 + 6.4;
+    items = [
+        [1,  "number"],
+        [3,  "Fizz"],
+        [5,  "Buzz"],
+        [15, "FizzBuzz"]
     ];
-    r = outer_radius() - 7.5;
-    span = 118;
-    for (i = [0 : len(samples) - 1]) {
-        n = samples[i][0];
-        ang = 250 + i * (span / (len(samples) - 1));
-        translate([r * cos(ang), r * sin(ang), BASE_H + 0.2])
-            rotate([0, 0, ang + 90])
-                color(samples[i][2])
-                    linear_extrude(height = 1.6, convexity = 8)
-                        text(samples[i][1], size = 3.1, font = FONT,
+    span = 130;
+    for (i = [0 : len(items) - 1]) {
+        n = items[i][0];
+        x = -span / 2 + i * (span / (len(items) - 1));
+        translate([x, y, BASE_H]) {
+            color(fb_tile_color(n))
+                linear_extrude(height = 1.5)
+                    rounded_rect(28, 5.8, 1.5);
+            color(TEXT_COLOR)
+                translate([0, 0, 1.5])
+                    linear_extrude(height = 1.2, convexity = 8)
+                        text(items[i][1], size = 2.8, font = FONT,
                              halign = "center", valign = "center");
+        }
     }
 }
 
+module cell(n) {
+    h   = fb_height(n);
+    s   = text_size(n);
+    t   = fb_label(n);
+    rad = (fb_kind(n) == "fizzbuzz") ? 1.8 :
+          (fb_kind(n) == "fizz")     ? CELL_D * 0.34 :
+          (fb_kind(n) == "buzz")     ? 1.2 :
+          1.4;
+
+    translate([cell_x(n), cell_y(n), BASE_H]) {
+        color(fb_tile_color(n))
+            linear_extrude(height = h * 0.40)
+                rounded_rect(CELL_W - 0.5, CELL_D - 0.5, rad);
+
+        color(TEXT_COLOR)
+            translate([0, 0, h * 0.40])
+                linear_extrude(height = h * 0.60, convexity = 12)
+                    text(t, size = s, font = FONT,
+                         halign = "center", valign = "center");
+    }
+}
+
+module grid() {
+    for (n = [1 : 100])
+        cell(n);
+}
+
 union() {
-    medallion();
+    plaque();
     title();
-    decade_rings();
     legend();
+    grid();
 }
